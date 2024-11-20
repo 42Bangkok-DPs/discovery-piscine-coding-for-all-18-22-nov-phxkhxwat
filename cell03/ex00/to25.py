@@ -4,8 +4,8 @@ x = int(input())
 
 if x >= 0 and x <= 25 :
     for i in range(x,26) :
-        print("Inside the loop , my variable is  " ,x)
-        x += 1
+        print("Inside the loop , my variable is  " ,i)
+        
         
         
 
