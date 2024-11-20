@@ -6,11 +6,7 @@ if len(sys.argv) > 1:
 
     if input_value == "yolo" :
         print("none")
-
-    else :
-        print("Invalid Input")
-            
-
+           
 else :
     row = 0
     while row <= 10 :
