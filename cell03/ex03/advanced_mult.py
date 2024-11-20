@@ -6,6 +6,7 @@ if len(sys.argv) > 1:
 
     if input_value == "yolo" :
         print("none")
+        sys.exit
            
 else :
     row = 0

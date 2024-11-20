@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
-x = input()
+def main():
+    x = input()
+    print(x.swapcase())
 
-print(x.swapcase())
+if __name__ == "__main__" :
+    main()
