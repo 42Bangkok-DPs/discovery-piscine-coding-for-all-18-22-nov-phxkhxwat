@@ -1,12 +1,23 @@
-import checkmate
+#!/usr/bin/env python3
+from checkmate import checkmate
 
 def main():
     
-    board = """
+    board = [
+        "........",
+        "........",
+        "........",
+        "........",
+        "........",
+        "........",
+        "........",
+        "........"
+    ]
+
+    
+    result = checkmate(board)
+    print(result)
 
 
-"""
-    checkmate(board)
-
-if __name__ == "__main__" :
+if __name__ == "__main__":
     main()

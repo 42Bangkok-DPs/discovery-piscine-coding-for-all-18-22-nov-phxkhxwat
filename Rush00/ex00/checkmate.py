@@ -1,81 +1,54 @@
-def find_king(board):
-    for row in range(len(board)):
-        for col in range(len(board[row])):
-            if board[row][col] == "K":
-                return (row, col)
-    return None
+def can_attack(piece, position, king_pos, board):
+   
+    directions = {
+        'P': [(-1, -1), (-1, 1)],  
+        'B': [(-1, -1), (-1, 1), (1, -1), (1, 1)],  
+        'R': [(0, -1), (0, 1), (-1, 0), (1, 0)],  
+        'Q': [(-1, -1), (-1, 1), (1, -1), (1, 1), (0, -1), (0, 1), (-1, 0), (1, 0)]  
+    }
 
+    if piece not in directions:
+        return False
 
-def is_square_attacked(board, row, col, attackers):
-    """Check if a square is attacked by any piece."""
-    size = len(board)
-    
-    # Pawn attacks (assume pawns move upwards for simplicity)
-    if "P" in attackers:
-        for dr, dc in [(-1, -1), (-1, 1)]:
-            nr, nc = row + dr, col + dc
-            if 0 <= nr < size and 0 <= nc < size and board[nr][nc] == "P":
+    for dr, dc in directions[piece]:
+        r, c = position
+        if piece == 'P':  
+            r += dr
+            c += dc
+            if (r, c) == king_pos:
                 return True
+            continue
 
-    # Rook and Queen horizontal/vertical attacks
-    if "R" in attackers or "Q" in attackers:
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nr, nc = row, col
-            while 0 <= nr < size and 0 <= nc < size:
-                nr, nc = nr + dr, nc + dc
-                if 0 <= nr < size and 0 <= nc < size:
-                    if board[nr][nc] == "R" or board[nr][nc] == "Q":
-                        return True
-                    elif board[nr][nc] != "":  # Blocked by another piece
-                        break
-
-    # Bishop and Queen diagonal attacks
-    if "B" in attackers or "Q" in attackers:
-        for dr, dc in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
-            nr, nc = row, col
-            while 0 <= nr < size and 0 <= nc < size:
-                nr, nc = nr + dr, nc + dc
-                if 0 <= nr < size and 0 <= nc < size:
-                    if board[nr][nc] == "B" or board[nr][nc] == "Q":
-                        return True
-                    elif board[nr][nc] != "":  # Blocked by another piece
-                        break
+        while 0 <= r < len(board) and 0 <= c < len(board[r]):  
+            r += dr
+            c += dc
+            if (r, c) == king_pos:
+                return True
+            if 0 <= r < len(board) and 0 <= c < len(board[r]) and board[r][c] != '.':
+                break
 
     return False
 
 
-def is_king_in_check(board):
-    """Determine if the King is in check."""
-    king_pos = find_king(board)
+def checkmate(board):
+   
+    king_pos = None
+    for i, row in enumerate(board):
+        for j, cell in enumerate(row):
+            if cell == 'K':
+                king_pos = (i, j)
+                break
+        if king_pos:
+            break
+
     if not king_pos:
-        return None  # No King on the board
+        return "Fail"  
 
-    row, col = king_pos
-    return is_square_attacked(board, row, col, {"P", "R", "B", "Q"})
+    
+    for i, row in enumerate(board):
+        for j, cell in enumerate(row):
+            if cell in "PBRQ":  
+                if can_attack(cell, (i, j), king_pos, board):
+                    return "Success"  
 
-
-def main():
-    # Example board
-    board = [
-        ["", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "R", "", ""],
-        ["", "", "", "", "K", "", "", ""],
-        ["", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", ""],
-    ]
-
-    # Check if King is in check
-    result = is_king_in_check(board)
-    if result:
-        print("Success")
-    elif result is False:
-        print("Fail")
-    else:
-        pass  # Handle invalid boards gracefully
-
-
-if __name__ == "__main__":
-    main()
+    return "Fail"  
